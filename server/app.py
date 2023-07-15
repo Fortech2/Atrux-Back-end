@@ -5,6 +5,7 @@ from flask_cors import CORS, cross_origin
 from flask_session import Session
 from config import ApplicationConfig
 from models import db, User
+import datetime
 
 app = Flask(__name__)
 app.config.from_object(ApplicationConfig)
@@ -15,6 +16,25 @@ db.init_app(app)
 with app.app_context():
         db.create_all()
 
+x = datetime.datetime.now()
+@app.route('/data', methods=["GET"])
+def get_time():
+ 
+    # Returning an api for showing in  reactjs
+    # return jsonify({
+    #     'Name':"geek",
+    #     "Age":"22",
+    #     "Date":x,
+    #     "programming":"python"
+    #     })
+    return jsonify(
+        name="ana",
+        age="12",
+        date="22",
+        programming="c++"
+    )
+ 
+     
 @app.route("/@me", methods=["GET"])
 def get_current_user():
     user_id = session.get("user_id")
