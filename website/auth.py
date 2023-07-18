@@ -8,7 +8,6 @@ from flask_login import login_user, login_required, logout_user, current_user
 auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods =['POST'])
-
 def login():
     data = request.get_json()
     email = data['email']
