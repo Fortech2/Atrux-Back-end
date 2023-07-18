@@ -1,2 +1,12 @@
 __pycache__/
 website/__pycache__/
+.idea
+Pipfile.lock
+.coverage
+__pycache__
+venv/
+logs
+resources/models/__pycache__
+resources/endpoints/__pycache__
+resources/constants/__pycache__
+resources/__pycache__
