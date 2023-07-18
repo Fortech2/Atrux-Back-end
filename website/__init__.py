@@ -5,6 +5,7 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 DB_NAME = "database.db"
 
+
 def make_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
@@ -30,4 +31,4 @@ def make_app():
     def load_user(id):
         return User.query.get(int(id))
 
-    return app 
+    return app
