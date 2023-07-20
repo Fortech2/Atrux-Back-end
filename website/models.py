@@ -3,19 +3,22 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 from uuid import uuid4
 
+def get_uuid():
+    return uuid4().hex
+
 class Driver(db.Model):
     __tablename__ = 'drivers'
-    id = db.Column(db.Integer, primary_key=True, unique=True)
+    id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
     name = db.Column(db.String(150))
     email = db.Column(db.String(345), unique=True) 
     password = db.Column(db.String(150))
-    dispatcher_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    dispatcher_id = db.Column(db.String(100), db.ForeignKey('users.id'))
 
-class User(db.Model, UserMixin): 
+class Dispatcher(db.Model, UserMixin): 
     __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True, unique=True)
+    id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
     name = db.Column(db.String(150))
     email = db.Column(db.String(345), unique=True) 
     password = db.Column(db.String(150))
-    phone_number = db.Column(db.Integer, unique=True)
+    phone_number = db.Column(db.String(11), unique=True)
     drivers = db.relationship('Driver')
