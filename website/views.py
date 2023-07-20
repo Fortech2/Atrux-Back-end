@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from . import db
-from .models import User, Driver
+from .models import Dispatcher, Driver
 from flask_login import login_user, login_required, logout_user, current_user
 
 views = Blueprint('views', __name__)
