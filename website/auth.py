@@ -37,7 +37,7 @@ def get_user_data():
             "id": current_user.id,
             "name": current_user.name,
             "email": current_user.email,
-            "phone_number": current_user.phone_number,
+            # "phone_number": current_user.phone_number,
             "role": "driver",
         }
     else:
