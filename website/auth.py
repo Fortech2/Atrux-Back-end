@@ -18,18 +18,37 @@ def login():
     if user:
         if check_password_hash(user.password, password):
             login_user(user, remember=True)
-            return make_response("You logged in successfully", 200)
+            return make_response(jsonify({"name": user.name, "email": user.email}), 200)
     driver = Driver.query.filter_by(email=email).first()
     if driver:
         if check_password_hash(driver.password, password):
             login_user(driver, remember=True)
-            return make_response("You logged in successfully", 200)
+            return make_response(jsonify({"name": driver.name, "email": driver.email}), 200)
 
     return make_response("Failed", 500)
 
 
 @auth.route('/logout')
+@auth.route('/user', methods=['GET'])
 @login_required
+def get_user_data():
+    if isinstance(current_user, Driver):
+        user_data = {
+            "id": current_user.id,
+            "name": current_user.name,
+            "email": current_user.email,
+            # "phone_number": current_user.phone_number,
+            "role": "driver",
+        }
+    else:
+        user_data = {
+            "id": current_user.id,
+            "name": current_user.name,
+            "email": current_user.email,
+            "phone_number": current_user.phone_number,
+            "role": "dispatcher",
+        }
+    return jsonify(user_data)
 def logout():
     logout_user()
     return make_response("logout complete", 200)
