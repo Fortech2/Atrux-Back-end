@@ -4,9 +4,16 @@ from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy.dialects.postgresql import insert
+import smtplib
+import ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 auth = Blueprint('auth', __name__)
 
+def generate_token():
+    import secrets
+    return secrets.token_hex(16)
 
 @auth.route('/login', methods=['POST'])
 def login():
@@ -27,6 +34,73 @@ def login():
 
     return make_response("Failed", 500)
 
+@auth.route('/password', methods=['PUT'])
+def index():
+    data = request.get_json()
+    email = data['email']
+    smtp_server = "smtp.gmail.com"
+    port = 587 
+
+    sender_email = "nicoaradarius2007@gmail.com"
+    sender_password = "eyysfzvwvheyjvcm"
+    receiver_email = email
+    subject = "Password change"
+
+    token = generate_token()
+
+    dispatcher = Dispatcher.query.filter_by(email=email).first()
+    driver = Dispatcher.query.filter_by(email=email).first()
+
+    if dispatcher:
+        dispatcher.token = token
+    elif driver:
+        driver.token = token
+    else:
+        return make_response("Email not found", 404)
+    db.session.commit()
+
+
+    body = f"http://127.0.0.1:5000/resetpassword/{token}"
+
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = email
+    message["Subject"] = subject
+
+    message.attach(MIMEText(body, "plain"))
+
+    context = ssl.create_default_context()
+
+    try:
+        with smtplib.SMTP(smtp_server, port) as server:
+            server.ehlo()
+            server.starttls(context=context)
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, receiver_email, message.as_string())
+        return make_response("Email sent successfully!", 200)
+    except Exception as e:
+        return(f"Failed to send email. Error: {e}", 400)
+    
+@auth.route('/resetpassword/<token>', methods=["POST"])
+def resetpassword(token):
+    # token = request.args.get('token')
+    print(token)
+    if request.method == 'POST':
+        data = request.get_json()
+        password = data['password']
+        dispatcher = Dispatcher.query.filter_by(token=token).first()
+        driver = Driver.query.filter_by(token=token).first()
+        if driver:
+            driver.password = generate_password_hash(password, method='sha256')
+            driver.token = ""
+            db.session.commit()
+            return make_response("Password reset successful.", 200)
+        elif dispatcher:
+            dispatcher.password = generate_password_hash(password, method='sha256')
+            db.session.commit()
+            return make_response("Password reset successful.", 200)
+        else:
+            return make_response("Invalid or expired token.", 400)
 
 @auth.route('/logout')
 @auth.route('/user', methods=['GET'])
@@ -63,6 +137,7 @@ def signup():
     email = data['email']
     password = data['password']
     phone_number = data['phone_number']
+    company = data['company']
 
     driver = Driver.query.filter_by(email=email).first()
     user = Dispatcher.query.filter_by(email=email).first()
@@ -75,12 +150,13 @@ def signup():
                 if dispatcher is None: 
                     return make_response("Dispatcher not found", 404)
                 new_driver = Driver(name=name, email=email, password=generate_password_hash(password, method='sha256'),
-                                    dispatcher_id=dispatcher.id)
+                                    dispatcher_id=dispatcher.id, company = company)
                 db.session.add(new_driver)
                 db.session.commit()
             case "dispatcher":
+                number_of_drivers = data['number_of_drivers']
                 new_user = Dispatcher(name=name, email=email, password=generate_password_hash(password, method='sha256'),
-                                phone_number=phone_number)
+                                phone_number=phone_number, company = company, number_of_drivers = number_of_drivers)
                 db.session.add(new_user)
                 db.session.commit()
         return make_response(jsonify({"Email": email, "Name": name}), 200)
