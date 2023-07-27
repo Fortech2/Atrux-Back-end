@@ -6,6 +6,11 @@ from uuid import uuid4
 def get_uuid():
     return uuid4().hex
 
+class Token(db.Model):
+    id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
+    user_id = db.Column(db.String(100))
+    token = db.Column(db.String(100))
+
 class Driver(db.Model, UserMixin):
     __tablename__ = 'drivers'
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)

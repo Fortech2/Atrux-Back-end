@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response, json
-from .models import Dispatcher, Driver
+from .models import Dispatcher, Driver, Token
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -49,16 +49,16 @@ def index():
     token = generate_token()
 
     dispatcher = Dispatcher.query.filter_by(email=email).first()
-    driver = Dispatcher.query.filter_by(email=email).first()
+    driver = Driver.query.filter_by(email=email).first()
 
     if dispatcher:
-        dispatcher.token = token
+        token_db = Token(user_id = dispatcher.id,token = token)
     elif driver:
-        driver.token = token
+        token_db = Token(user_id = driver.id, token = token)
     else:
         return make_response("Email not found", 404)
+    db.session.add(token_db)
     db.session.commit()
-
 
     body = f"http://127.0.0.1:5000/resetpassword/{token}"
 
@@ -88,15 +88,18 @@ def resetpassword(token):
     if request.method == 'POST':
         data = request.get_json()
         password = data['password']
-        dispatcher = Dispatcher.query.filter_by(token=token).first()
-        driver = Driver.query.filter_by(token=token).first()
+        token_db = Token.query.filter_by(token=token).first()
+        if token_db:
+            driver = Driver.query.filter_by(id=token_db.user_id).first()
+            dispatcher = Dispatcher.query.filter_by(id=token_db.user_id).first()
         if driver:
             driver.password = generate_password_hash(password, method='sha256')
-            driver.token = ""
+            Token.query.filter_by(token=token).delete()
             db.session.commit()
             return make_response("Password reset successful.", 200)
         elif dispatcher:
             dispatcher.password = generate_password_hash(password, method='sha256')
+            Token.query.filter_by(token=token).delete()
             db.session.commit()
             return make_response("Password reset successful.", 200)
         else:
