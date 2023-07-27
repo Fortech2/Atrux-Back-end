@@ -6,6 +6,11 @@ from uuid import uuid4
 def get_uuid():
     return uuid4().hex
 
+class Token(db.Model):
+    id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
+    user_id = db.Column(db.String(100))
+    token = db.Column(db.String(100))
+
 class Driver(db.Model, UserMixin):
     __tablename__ = 'drivers'
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
@@ -14,6 +19,7 @@ class Driver(db.Model, UserMixin):
     password = db.Column(db.String(150))
     company = db.Column(db.String(150))
     dispatcher_id = db.Column(db.String(100), db.ForeignKey('users.id'))
+    token = db.Column(db.String(100))
 
 class Dispatcher(db.Model, UserMixin): 
     __tablename__ = "users"
@@ -24,4 +30,5 @@ class Dispatcher(db.Model, UserMixin):
     phone_number = db.Column(db.String(11), unique=True)
     company = db.Column(db.String(150))
     number_of_drivers = db.Column(db.Integer, default=0)
+    token = db.Column(db.String(100))
     drivers = db.relationship('Driver')
