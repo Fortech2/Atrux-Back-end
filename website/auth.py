@@ -8,6 +8,7 @@ import smtplib
 import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import datetime
 
 auth = Blueprint('auth', __name__)
 
@@ -51,16 +52,24 @@ def index():
     dispatcher = Dispatcher.query.filter_by(email=email).first()
     driver = Driver.query.filter_by(email=email).first()
 
+    now = datetime.datetime.now()
+
     if dispatcher:
-        token_db = Token(user_id = dispatcher.id,token = token)
+        existing_token_db = Token.query.filter_by(user_id=dispatcher.id).first()
+        if existing_token_db:
+            Token.query.filter_by(user_id=dispatcher.id).delete()
+        token_db = Token(expiration = str(f"{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}"), user_id = dispatcher.id,token = token)
     elif driver:
-        token_db = Token(user_id = driver.id, token = token)
+        existing_token_db = Token.query.filter_by(user_id=driver.id).first()
+        if existing_token_db:
+            Token.query.filter_by(user_id=dispatcher.id).delete()
+        token_db = Token(expiration = str(f"{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}"), user_id = driver.id, token = token)
     else:
         return make_response("Email not found", 404)
     db.session.add(token_db)
     db.session.commit()
 
-    body = f"http://127.0.0.1:5000/resetpassword/{token}"
+    body = f"http://18.185.137.152/resetpassword/{token}"
 
     message = MIMEMultipart()
     message["From"] = sender_email
@@ -84,24 +93,30 @@ def index():
 @auth.route('/resetpassword/<token>', methods=["POST"])
 def resetpassword(token):
     # token = request.args.get('token')
-    print(token)
     if request.method == 'POST':
         data = request.get_json()
         password = data['password']
         token_db = Token.query.filter_by(token=token).first()
         if token_db:
+            str_date = token_db.expiration
+            str_list = str_date.split('-')
+            creation_date = datetime.datetime(int(str_list[0]), int(str_list[1]), int(str_list[2]), int(str_list[3]), int(str_list[4]), int(str_list[5]))
+            now_time = datetime.datetime.now()
+            if((now_time - creation_date).seconds > 600):
+                Token.query.filter_by(token=token).delete()
+                return make_response("Invalid or expired token.", 400)
             driver = Driver.query.filter_by(id=token_db.user_id).first()
             dispatcher = Dispatcher.query.filter_by(id=token_db.user_id).first()
-        if driver:
-            driver.password = generate_password_hash(password, method='sha256')
-            Token.query.filter_by(token=token).delete()
-            db.session.commit()
-            return make_response("Password reset successful.", 200)
-        elif dispatcher:
-            dispatcher.password = generate_password_hash(password, method='sha256')
-            Token.query.filter_by(token=token).delete()
-            db.session.commit()
-            return make_response("Password reset successful.", 200)
+            if driver:
+                driver.password = generate_password_hash(password, method='sha256')
+                Token.query.filter_by(token=token).delete()
+                db.session.commit()
+                return make_response("Password reset successful.", 200)
+            elif dispatcher:
+                dispatcher.password = generate_password_hash(password, method='sha256')
+                Token.query.filter_by(token=token).delete()
+                db.session.commit()
+                return make_response("Password reset successful.", 200)
         else:
             return make_response("Invalid or expired token.", 400)
 
