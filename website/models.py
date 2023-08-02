@@ -14,18 +14,19 @@ class Token(db.Model, UserMixin):
 class Driver(db.Model, UserMixin):
     __tablename__ = 'drivers'
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
-    book = db.Column(db.String(100))
     name = db.Column(db.String(150))
-    email = db.Column(db.String(345), unique=True) 
+    email = db.Column(db.String(345), unique=True)
+    phone_number = db.Column(db.String(11), unique=True)
     password = db.Column(db.String(150))
     company = db.Column(db.String(150))
+    route = db.Column(db.String(500))
     dispatcher_id = db.Column(db.String(100), db.ForeignKey('users.id'))
 
 class Dispatcher(db.Model, UserMixin): 
     __tablename__ = "users"
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
     name = db.Column(db.String(150))
-    email = db.Column(db.String(345), unique=True) 
+    email = db.Column(db.String(345), unique=True)
     password = db.Column(db.String(150))
     phone_number = db.Column(db.String(11), unique=True)
     company = db.Column(db.String(150))
