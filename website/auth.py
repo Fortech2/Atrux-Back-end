@@ -129,16 +129,17 @@ def get_user_data():
             "id": current_user.id,
             "name": current_user.name,
             "email": current_user.email,
-            # "phone_number": current_user.phone_number,
             "role": "driver",
         }
     else:
+        dispatcher_drivers = [driver.name for driver in current_user.drivers]  
         user_data = {
             "id": current_user.id,
             "name": current_user.name,
             "email": current_user.email,
             "phone_number": current_user.phone_number,
             "role": "dispatcher",
+            "drivers": dispatcher_drivers, 
         }
     return jsonify(user_data)
 def logout():
