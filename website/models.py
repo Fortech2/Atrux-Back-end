@@ -6,6 +6,12 @@ from uuid import uuid4
 def get_uuid():
     return uuid4().hex
 
+
+class Images(db.Model):
+    id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
+    user_id = db.Column(db.String(100))
+    img = db.Column(db.LargeBinary)
+
 class Token(db.Model, UserMixin):
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
     user_id = db.Column(db.String(100))

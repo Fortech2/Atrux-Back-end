@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response, json
-from .models import Dispatcher, Driver, Token
+from .models import Dispatcher, Driver, Token, Images
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user

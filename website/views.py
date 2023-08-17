@@ -5,9 +5,9 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 views = Blueprint('views', __name__)
 
-@views.route('/', methods=['GET'])
+@views.route('/', methods=['POST'])
 def home():
-    return current_user
+    return make_response("Success!", 200)
 
 @views.route('/drivers', methods=['GET'])
 @login_required
