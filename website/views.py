@@ -1,13 +1,19 @@
 from flask import Blueprint, request, jsonify, make_response
 from . import db
-from .models import Dispatcher, Driver
+from .models import Dispatcher, Driver, Images
 from flask_login import login_user, login_required, logout_user, current_user
-
+import PIL.Image
+import base64
+import io
 views = Blueprint('views', __name__)
 
 @views.route('/', methods=['POST'])
 def home():
-    return make_response("Success!", 200)
+    # print(image.user_id)
+    print(len(current_user.images[0].img))
+    imag = PIL.Image.open(io.BytesIO(current_user.images[0].img))
+    imag.save('nume_poza4124.png')
+    return make_response("Success", 200)
 
 @views.route('/drivers', methods=['GET'])
 @login_required

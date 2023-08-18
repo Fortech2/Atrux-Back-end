@@ -9,7 +9,7 @@ def get_uuid():
 
 class Images(db.Model):
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
-    user_id = db.Column(db.String(100))
+    user_id = db.Column(db.String(100), db.ForeignKey('drivers.id'))
     img = db.Column(db.LargeBinary)
 
 class Token(db.Model, UserMixin):
@@ -27,6 +27,7 @@ class Driver(db.Model, UserMixin):
     company = db.Column(db.String(150))
     route = db.Column(db.String(500))
     dispatcher_id = db.Column(db.String(100), db.ForeignKey('users.id'))
+    images = db.relationship('Images')
 
 class Dispatcher(db.Model, UserMixin): 
     __tablename__ = "users"
