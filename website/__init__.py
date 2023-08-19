@@ -59,8 +59,7 @@ token_cleanup_thread.start()
 
 def make_app():
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
-    #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Cristian1981.@mypostgres.postgres.database.azure.com/test'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/test'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Cristian1981.@mypostgres.postgres.database.azure.com/test'
     db.init_app(app)
 
     from .views import views
