@@ -69,7 +69,7 @@ def index():
     db.session.add(token_db)
     db.session.commit()
 
-    body = f"http://18.185.137.152/resetpassword/{token}"
+    body = f"https://atrux.azurewebsites.net/resetpassword/{token}"
 
     message = MIMEMultipart()
     message["From"] = sender_email
