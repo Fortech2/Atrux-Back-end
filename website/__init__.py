@@ -2,6 +2,18 @@ from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import time
+from azure.servicebus import ServiceBusClient, ServiceBusMessage
+connection_string = "Endpoint=sb://AtruXNotifications.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=xGQNO8958mHDVPPruiIpYpHCF60ThUjI7wExpWbivko="
+hub_name = "your_notification_hub_name"
+queue_name = "Azure"
+
+notification_hub_client = ServiceBusClient.from_connection_string(connection_string)
+
+def send_notification(image_uuid, message):
+    with notification_hub_client.get_queue_sender(queue_name) as sender:
+        notification_message = ServiceBusMessage(message)
+        notification_message.application_properties = {"image_uuid": image_uuid}
+        sender.send_messages(notification_message)
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -37,6 +49,9 @@ def callback(ch, method, properties, body):
     imag.save('nume_poza.png')
 
     print(len(raw_bytes))
+
+    send_notification("421512", "Salut, asta este un test foarte avansat!")
+    print("Mesajul a fost transmis")
 
     with app.app_context():
         img = Images(user_id = uuid, img = raw_bytes)
