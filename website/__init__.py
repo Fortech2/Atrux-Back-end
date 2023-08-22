@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import time
@@ -6,6 +6,7 @@ import time
 db = SQLAlchemy()
 DB_NAME = "database.db"
 app = Flask(__name__)
+
 
 import pika, os
 import PIL.Image
@@ -21,6 +22,7 @@ params = pika.URLParameters(url)
 connection = pika.BlockingConnection(params)
 channel = connection.channel() # start a channel
 channel.queue_declare(queue='hello') # Declare a queue
+
 def callback(ch, method, properties, body):
     json_data = json.loads(body)
     image_str : str = json_data['image']
@@ -58,6 +60,8 @@ token_cleanup_thread.start()
 
 
 def make_app():
+
+
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Cristian1981.@mypostgres.postgres.database.azure.com/test'
     db.init_app(app)
@@ -87,3 +91,6 @@ def make_app():
         return user
 
     return app
+
+if __name__ == "__main__":
+    pass
