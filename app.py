@@ -18,7 +18,7 @@ def handle_disconnect():
 @socket_io.on('to-server')
 def handle_to_server(arg):
     print(f'new to-server event: {arg}')
-    socket_io.emit('from-server', 'hello from backend')  # Emit the message
+    socket_io.emit('from-server', 'hello from backend daisojfo iajoifjoiasfij')  # Emit the message
 
 if __name__ == '__main__':
     gevent_worker = 'geventwebsocket.gunicorn.workers.GeventWebSocketWorker'
