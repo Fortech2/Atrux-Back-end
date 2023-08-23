@@ -9,10 +9,15 @@ socket_io = SocketIO(app, cors_allowed_origins="*")
 def handle_connect():
     print('new connection')
 
+@socket_io.on('disconnect')
+def handle_disconnect():
+    print('disconnected')
+
 @socket_io.on('to-server')
 def handle_to_server(arg):
     print(f'new to-server event: {arg}')
     socket_io.emit('from-server', 'hello from backend')  # Emit the message
+
 
 if __name__ == '__main__':
     socket_io = SocketIO(app, cors_allowed_origins="*")
