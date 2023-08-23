@@ -1,10 +1,11 @@
 from website import make_app
 from flask_socketio import SocketIO
 import time
+import gevent
 
 app = make_app()
 
-socket_io = SocketIO(app, cors_allowed_origins="*")
+socket_io = SocketIO(app, cors_allowed_origins="*", async_mode='gevent_uwsgi')
 @socket_io.on('connect')
 def handle_connect():
     print('new connection')
