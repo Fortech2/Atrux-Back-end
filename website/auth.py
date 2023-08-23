@@ -210,3 +210,8 @@ def remove_driver():
         driver = Driver.query.filter_by(id=id).first()
         driver.dispatcher_id = "Marinel"
         return make_response('Driver removed', 200)
+
+
+@auth.route('/test', methods=['GET'])
+def test():
+    return make_response('Test endpoint', 200)
