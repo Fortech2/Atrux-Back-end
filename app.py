@@ -1,10 +1,10 @@
 from website import make_app
 from flask_socketio import SocketIO
-import geventwebsocket.gunicorn.workers
+#import geventwebsocket.gunicorn.workers
 
 app = make_app()
 
-socket_io = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
+socket_io = SocketIO(app, cors_allowed_origins="*") #, async_mode='gevent')
 
 @socket_io.on('connect')
 def handle_connect():
@@ -22,4 +22,4 @@ def handle_to_server(arg):
 
 if __name__ == '__main__':
     gevent_worker = 'geventwebsocket.gunicorn.workers.GeventWebSocketWorker'
-    socket_io.run(app, port=50000, worker=gevent_worker)
+    socket_io.run(app, port=50000)#, worker=gevent_worker)
