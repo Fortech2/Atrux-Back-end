@@ -12,7 +12,7 @@ def handle_connect():
 @socket_io.on('to-server')
 def handle_to_server(arg):
     print(f'new to-server event: {arg}')
-    socket_io.emit('from-server', str(time()))
+    socket_io.emit('from-server', 'hello from backend')  # Emit the message
 
 if __name__ == '__main__':
     socket_io = SocketIO(app, cors_allowed_origins="*")
