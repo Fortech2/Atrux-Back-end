@@ -1,5 +1,6 @@
 from website import make_app
 from flask_socketio import SocketIO
+import geventwebsocket.gunicorn.workers
 
 app = make_app()
 
@@ -19,4 +20,5 @@ def handle_to_server(arg):
     socket_io.emit('from-server', 'hello from backend')  # Emit the message
 
 if __name__ == '__main__':
-    socket_io.run(app, port=50000)
+    gevent_worker = 'geventwebsocket.gunicorn.workers.GeventWebSocketWorker'
+    socket_io.run(app, port=50000, worker=gevent_worker)
