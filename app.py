@@ -15,6 +15,5 @@ def handle_to_server(arg):
     socket_io.emit('from-server', str(time()))
 
 if __name__ == '__main__':
-    app.run(debug=True)
     socket_io = SocketIO(app, cors_allowed_origins="*")
     socket_io.run(app, port=50000)
