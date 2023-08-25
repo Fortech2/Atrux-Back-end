@@ -1,6 +1,6 @@
 from flask_socketio import SocketIO
 from website.models import Driver
-
+from flask_socketio import join_room, leave_room
 
 
 
@@ -12,7 +12,7 @@ def get_driver_email_by_id(driver_id):
         return driver.email
     return None
 
-@socket_io.on('connect')
+@socket_io.on('connecting')
 def handle_connect(driver_email):
     socket_io.join_room(driver_email)
     print(f'Driver {driver_email} connected')
