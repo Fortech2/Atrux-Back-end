@@ -1,7 +1,8 @@
 from flask_login import login_required, current_user
 from flask import Blueprint, request, make_response
 from .models import Driver
-from . import db, socket_io
+from . import db
+from app import socket_io
 
 
 chat = Blueprint('chat', __name__)
