@@ -1,12 +1,11 @@
-from flask_login import login_required, current_user
+from flask_login import login_required
 from flask import Blueprint, request, make_response
-from .models import Driver
-from . import db
-from app import socket_io
-
+from website.models import Driver
+from socketio_manager import socket_io
 
 chat = Blueprint('chat', __name__)
 connected_drivers = set()
+
 @chat.route("/route", methods=['POST', "DELETE"])
 @login_required
 def add_route():
@@ -17,16 +16,14 @@ def add_route():
     if driver:
         if request.method == "POST":
             route = data["route"]
-            if driver.route != route:  # Check if the route actually changed
+            if driver.route != route:
                 driver.route = route
-                db.session.commit()
-                if driver.email in connected_drivers:
-                    socket_io.emit('route-changed', {"message": "Route changed"}, room=driver.email)
+                socket_io.emit('route-changed', {"message": "Route changed"}, room=driver_email)
+                # Rest of your route update code
         else:
             driver.route = ""
-            db.session.commit()
-            if driver.email in connected_drivers:
-                socket_io.emit('route-changed', {"message": "Route changed"}, room=driver.email)
+            socket_io.emit('route-changed', {"message": "Route changed"}, room=driver_email)
+            # Rest of your route update code
 
         return make_response("Route changed", 200)
     else:
