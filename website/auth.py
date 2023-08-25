@@ -120,16 +120,23 @@ def resetpassword(token):
         else:
             return make_response("Invalid or expired token.", 400)
 
-@auth.route('/logout')
+
 @auth.route('/user', methods=['GET'])
 @login_required
 def get_user_data():
     if isinstance(current_user, Driver):
+        dispatcher_phone_number = None
+        dispatcher = Dispatcher.query.get(current_user.dispatcher_id)
+        if dispatcher:
+            dispatcher_phone_number = dispatcher.phone_number
+
         user_data = {
             "id": current_user.id,
             "name": current_user.name,
             "email": current_user.email,
+            "phone_number": current_user.phone_number,
             "role": "driver",
+            "dispatcher_phone_number": dispatcher_phone_number
         }
     else:
         dispatcher_drivers = [
@@ -145,6 +152,8 @@ def get_user_data():
             "drivers": dispatcher_drivers,  # Now includes name and email
         }
     return jsonify(user_data)
+@auth.route('/logout')
+@login_required
 def logout():
     logout_user()
     return make_response("logout complete", 200)
