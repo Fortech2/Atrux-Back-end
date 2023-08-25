@@ -20,13 +20,13 @@ def add_route():
                 driver.route = route
                 
                 notification_message = f'Route updated: {driver.route}'
-                socket_io.emit('custom-notification', {"message": notification_message}, room=driver_email)
-                print("Sent notification:", notification_message)
-            
+                
+                socket_io.emit('route-changed', {"message": notification_message}, room=driver_email)
+                print("Emitted route-changed event:", notification_message)
         else:
             driver.route = ""
             socket_io.emit('route-changed', {"message": "Route changed"}, room=driver_email)
-            # Rest of your route update code
+            
 
         return make_response("Route changed", 200)
     else:
