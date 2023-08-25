@@ -2,7 +2,9 @@ from flask_socketio import SocketIO
 from website.models import Driver
 
 
-socket_io = SocketIO(cors_allowed_origins="*")
+
+
+socket_io = SocketIO(cors_allowed_origins="*", async_mode="gevent")
 
 def get_driver_email_by_id(driver_id):
     driver = Driver.query.get(driver_id)
