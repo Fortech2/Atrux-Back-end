@@ -36,5 +36,10 @@ def handle_disconnect():
 @socket_io.on('route-changed')
 def handle_route_changed(data):
     driver_email = data.get("driver_email")
-    socket_io.emit('custom-notification', {"message": data["route"]}, room=driver_email)
-    print(f'Route changed notification sent to Driver {driver_email}')
+    route = data.get("route")
+    
+    if driver_email and route:
+        socket_io.emit('custom-notification', {"message": route}, room=driver_email)
+        print(f'Route changed notification sent to Driver {driver_email}')
+    else:
+        print('Missing or incomplete data in route-changed event')
