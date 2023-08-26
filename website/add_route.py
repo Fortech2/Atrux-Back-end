@@ -15,6 +15,9 @@ def add_route():
     if request.method == "POST":
         route = data["route"]
         driver.route = route
+        print(driver_email)
+        print(driver_email)
+        print(driver_email)
         handle_notification(driver_email)
     else:
         driver.route = "" 
