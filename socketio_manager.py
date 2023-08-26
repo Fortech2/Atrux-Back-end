@@ -13,17 +13,17 @@ def get_driver_email_by_id(driver_id):
     return None
 
 @socket_io.on('connecting')
-def handle_connect(driver_email):
-    socket_io.join_room(driver_email)
+def handle_connect(data):
+    driver_email = data['driver_email']
+    join_room(driver_email)  # Use join_room from the socketio module
     print(f'Driver {driver_email} connected')
 
 @socket_io.on('disconnect')
-def handle_disconnect(driver_email):
-    socket_io.leave_room(driver_email)
-    print(f'Driver {driver_email} disconnected')
+def handle_disconnect():
+    print('Client disconnected')
 
 @socket_io.on('route-changed')
 def handle_route_changed(data):
-    driver_email = data.get("driver_email") 
+    driver_email = data.get("driver_email")
     socket_io.emit('custom-notification', {"message": data["route"]}, room=driver_email)
     print(f'Route changed notification sent to Driver {driver_email}')
