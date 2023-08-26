@@ -13,8 +13,7 @@ def get_driver_email_by_id(driver_id):
     return None
 
 @socket_io.on('connecting')
-def handle_connect(data):
-    driver_email = data  
+def handle_connect(driver_email):
     join_room(driver_email)
     print(f'Driver {driver_email} connected')
 
