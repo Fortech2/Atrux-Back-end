@@ -40,7 +40,7 @@ def callback(ch, method, properties, body):
     print(len(raw_bytes))
 
     handle_to_server("fasfsa")
-    handle_notification()
+    handle_notification("ica@gmail.com")
 
 
     with app.app_context():
