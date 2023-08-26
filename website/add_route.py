@@ -1,7 +1,7 @@
 from flask_login import login_required
 from flask import Blueprint, request, make_response
 from website.models import Driver
-from socketio_manager import socket_io
+# from socketio_manager import socket_io
 
 chat = Blueprint('chat', __name__)
 connected_drivers = set()
@@ -21,11 +21,11 @@ def add_route():
                 
                 notification_message = f'Route updated: {driver.route}'
                 
-                socket_io.emit('route-changed', {"message": notification_message}, room=driver_email)
-                print("Emitted route-changed event:", notification_message)
+                # socket_io.emit('route-changed', {"message": notification_message}, room=driver_email)
+                # print("Emitted route-changed event:", notification_message)
         else:
             driver.route = ""
-            socket_io.emit('route-changed', {"message": "Route changed"}, room=driver_email)
+            # socket_io.emit('route-changed', {"message": "Route changed"}, room=driver_email)
             
 
         return make_response("Route changed", 200)
