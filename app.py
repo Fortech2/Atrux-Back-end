@@ -25,26 +25,12 @@ def handle_to_server(arg):
     socket_io.emit('to-server', f'{arg}')
     print("Message sent")  # Emit the message
 
-@socket_io.on("not")
-def not_not():
+@socket_io.on('notification')
+def handle_notification():
     room = "ica@gmail.com"
-    name = session.get("name")
-    # if not room or not name:
-    #     return
-    # if room not in rooms:
-        # leave_room(room)
-        # return
-    
-    join_room(room)
-    socket_io.emit('not', "Salut - 1")
-    print(f"{name} joined room {room}")
-
-# @socket_io.on('notification')
-# def handle_notification():
-#     room = "ica@gmail.com"
-#     message = "salut"
-#     socket_io.emit('notification', {'message': message}, room=room)
-#     print(f'Sent notification to room {room}: {message}')
+    message = "salut"
+    socket_io.emit('notification', {'message': message}, room=room)
+    print(f'Sent notification to room {room}: {message}')
 
 @socket_io.on('subscribe')
 def handle_subscribe(data):

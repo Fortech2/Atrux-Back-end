@@ -18,7 +18,7 @@ def add_route():
         print(driver_email)
         print(driver_email)
         print(driver_email)
-        not_not()
+        # not_not()
     else:
         driver.route = "" 
     db.session.commit()
