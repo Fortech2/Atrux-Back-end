@@ -27,13 +27,13 @@ def handle_to_server(arg):
 def handle_notification():
     #room = data['room']
     room = 'ica@gmail.com'
-    message = data['message']
+    message = "salut"
     socket_io.emit('notification', {'message': message}, room=room)
     print(f'Sent notification to room {room}: {message}')
 
 @socket_io.on('subscribe')
 def handle_subscribe(data):
-    room = data['room']
+    room = 'ica@gmail.com'
     join_room(room)
     print(f'Client joined room: {room}')
 
