@@ -14,8 +14,8 @@ def get_driver_email_by_id(driver_id):
 
 @socket_io.on('connecting')
 def handle_connect(data):
-    driver_email = data['driver_email']
-    join_room(driver_email)  # Use join_room from the socketio module
+    driver_email = data  
+    join_room(driver_email)
     print(f'Driver {driver_email} connected')
 
 @socket_io.on('disconnect')
