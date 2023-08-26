@@ -36,8 +36,7 @@ def not_not():
         # return
     
     join_room(room)
-    send({"name": "Darius_fdsf", "message": "has entered the room"}, to=room)
-    rooms[room]["members"] += 1
+    socket_io.emit('not', "Salut - 1")
     print(f"{name} joined room {room}")
 
 # @socket_io.on('notification')
