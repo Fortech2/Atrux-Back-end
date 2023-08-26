@@ -1,9 +1,31 @@
-from website import make_app
-from socketio_manager import socket_io
-import geventwebsocket.gunicorn.workers
+# from website import make_app
+from flask_socketio import SocketIO
+from flask import Flask
+#import geventwebsocket.gunicorn.workers
 
-app = make_app()
-socket_io.init_app(app)
+# app = make_app()
+app = Flask(__name__)
+
+socket_io = SocketIO(app, cors_allowed_origins="*") #, async_mode='gevent')
+
+@socket_io.on('connect')
+def handle_connect():
+    print('new connection')
+    socket_io.emit('from-server', 'hello from backend')
+
+@socket_io.on('disconnect')
+def handle_disconnect():
+    print('disconnected')
+
+@socket_io.on('to-server')
+def handle_to_server(arg):
+    print(f'new to-server event: {arg}')
+    socket_io.emit('from-server', 'hello from backend daisojfo iajoifjoiasfij')
+    print("Message sent")  # Emit the message
+
+from website import callback
+
 if __name__ == '__main__':
+    app.run()
     gevent_worker = 'geventwebsocket.gunicorn.workers.GeventWebSocketWorker'
-    socket_io.run(app, port=50000, worker=gevent_worker)
+    socket_io.run(app, port=50000)#, worker=gevent_worker)

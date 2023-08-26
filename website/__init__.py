@@ -2,11 +2,10 @@ from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import time
+from app import app ,handle_to_server
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
-app = Flask(__name__)
-
 
 import pika, os
 import PIL.Image
@@ -40,6 +39,8 @@ def callback(ch, method, properties, body):
 
     print(len(raw_bytes))
 
+    handle_to_server("fasfsa")
+
     with app.app_context():
         img = Images(user_id = uuid, img = raw_bytes)
         db.session.add(img)
@@ -59,38 +60,33 @@ token_cleanup_thread = Thread(target=read)
 token_cleanup_thread.start()
 
 
-def make_app():
+app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Cristian1981.@mypostgres.postgres.database.azure.com/test'
+db.init_app(app)
 
+from .views import views
+from .auth import auth
+from .add_route import chat
 
-    app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Cristian1981.@mypostgres.postgres.database.azure.com/test'
-    db.init_app(app)
+app.register_blueprint(views, url_prefix="/")
+app.register_blueprint(auth, url_prefix="/")
+app.register_blueprint(chat, url_prefix="/")
 
-    from .views import views
-    from .auth import auth
-    from .add_route import chat
+from .models import Dispatcher, Driver
 
-    app.register_blueprint(views, url_prefix="/")
-    app.register_blueprint(auth, url_prefix="/")
-    app.register_blueprint(chat, url_prefix="/")
+with app.app_context():
+    db.create_all()
 
-    from .models import Dispatcher, Driver
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
+login_manager.init_app(app)
 
-    with app.app_context():
-        db.create_all()
-
-    login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
-    login_manager.init_app(app)
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        user = Dispatcher.query.get(user_id)
-        if not user:
-            user = Driver.query.get(user_id)
-        return user
-
-    return app
+@login_manager.user_loader
+def load_user(user_id):
+    user = Dispatcher.query.get(user_id)
+    if not user:
+        user = Driver.query.get(user_id)
+    return user
 
 if __name__ == "__main__":
     pass
