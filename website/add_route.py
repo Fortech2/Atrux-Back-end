@@ -15,7 +15,7 @@ def add_route():
     if request.method == "POST":
         route = data["route"]
         driver.route = route
-        handle_notification(current_user.email)
+        handle_notification(driver_email)
     else:
         driver.route = "" 
     db.session.commit()
