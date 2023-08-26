@@ -18,7 +18,7 @@ def add_route():
         print(driver_email)
         print(driver_email)
         print(driver_email)
-        handle_notification(driver_email)
+        handle_notification()
     else:
         driver.route = "" 
     db.session.commit()
