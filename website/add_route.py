@@ -2,7 +2,7 @@ from flask_login import login_required, current_user
 from flask import Blueprint, request, make_response
 from .models import Driver
 from . import db
-from app import  not_not
+from app import  handle_notification
 
 chat = Blueprint('chat', __name__)
 
@@ -18,7 +18,7 @@ def add_route():
         print(driver_email)
         print(driver_email)
         print(driver_email)
-        # not_not()
+        handle_notification()
     else:
         driver.route = "" 
     db.session.commit()
