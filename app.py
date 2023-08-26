@@ -25,7 +25,7 @@ def handle_to_server(arg):
 
 @socket_io.on('notification')
 def handle_notification(email):
-    room = email
+    room = "ica@gmail.com"
     message = "salut"
     socket_io.emit('notification', {'message': message}, room=room)
     print(f'Sent notification to room {room}: {message}')
