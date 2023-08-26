@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import time
-from app import app ,handle_to_server, handle_notification
+from app import app ,handle_to_server, not_not
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -40,7 +40,7 @@ def callback(ch, method, properties, body):
     print(len(raw_bytes))
 
     handle_to_server("fasfsa")
-    handle_notification()
+    not_not()
 
 
     with app.app_context():

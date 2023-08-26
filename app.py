@@ -1,10 +1,12 @@
 # from website import make_app
-from flask_socketio import SocketIO, join_room, leave_room
-from flask import Flask
+from flask_socketio import SocketIO, join_room, leave_room, send
+from flask import Flask, session
 #import geventwebsocket.gunicorn.workers
 
 # app = make_app()
 app = Flask(__name__)
+rooms = {}
+
 
 socket_io = SocketIO(app, cors_allowed_origins="*") #, async_mode='gevent')
 
@@ -23,12 +25,27 @@ def handle_to_server(arg):
     socket_io.emit('to-server', f'{arg}')
     print("Message sent")  # Emit the message
 
-@socket_io.on('notification')
-def handle_notification():
+@socket_io.on("not")
+def not_not():
     room = "ica@gmail.com"
-    message = "salut"
-    socket_io.emit('notification', {'message': message}, room=room)
-    print(f'Sent notification to room {room}: {message}')
+    name = session.get("name")
+    # if not room or not name:
+    #     return
+    # if room not in rooms:
+        # leave_room(room)
+        # return
+    
+    join_room(room)
+    send({"name": "Darius_fdsf", "message": "has entered the room"}, to=room)
+    rooms[room]["members"] += 1
+    print(f"{name} joined room {room}")
+
+# @socket_io.on('notification')
+# def handle_notification():
+#     room = "ica@gmail.com"
+#     message = "salut"
+#     socket_io.emit('notification', {'message': message}, room=room)
+#     print(f'Sent notification to room {room}: {message}')
 
 @socket_io.on('subscribe')
 def handle_subscribe(data):
