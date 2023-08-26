@@ -1,5 +1,5 @@
 # from website import make_app
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, join_room, leave_room
 from flask import Flask
 #import geventwebsocket.gunicorn.workers
 
@@ -22,6 +22,26 @@ def handle_to_server(arg):
     print(f'new to-server event: {arg}')
     socket_io.emit('to-server', f'{arg}')
     print("Message sent")  # Emit the message
+
+@socket_io.on('notification')
+def handle_notification(data):
+    #room = data['room']
+    room = 'ica@gmail.com'
+    message = data['message']
+    socket_io.emit('notification', {'message': message}, room=room)
+    print(f'Sent notification to room {room}: {message}')
+
+@socket_io.on('subscribe')
+def handle_subscribe(data):
+    room = data['room']
+    join_room(room)
+    print(f'Client joined room: {room}')
+
+@socket_io.on('unsubscribe')
+def handle_unsubscribe(data):
+    room = data['room']
+    leave_room(room)
+    print(f'Client left room: {room}')
 
 from website import callback
 
