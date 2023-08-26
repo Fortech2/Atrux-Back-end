@@ -1,10 +1,10 @@
 from flask_socketio import SocketIO
 from website.models import Driver
 from flask_socketio import join_room, leave_room
+from website.auth import get_user_data
 
 
-
-socket_io = SocketIO(cors_allowed_origins="*", async_mode="gevent")
+socket_io = SocketIO(cors_allowed_origins="*", manage_session=True, async_mode="gevent")
 
 def get_driver_email_by_id(driver_id):
     driver = Driver.query.get(driver_id)
@@ -12,10 +12,22 @@ def get_driver_email_by_id(driver_id):
         return driver.email
     return None
 
-@socket_io.on('connecting')
-def handle_connect(driver_email):
-    join_room(driver_email)
-    print(f'Driver {driver_email} connected')
+@socket_io.on('connect')
+def handle_connect():
+    user_data_response = get_user_data()
+    if user_data_response.status_code == 200:
+        user_data = user_data_response.json()
+        user_id = user_data["id"]
+        driver_email = get_driver_email_by_id(user_id)
+        if driver_email:
+            join_room(driver_email)
+            print(f'Driver {driver_email} connected')
+        else:
+            # Handle the case where user is not authenticated properly
+            pass
+    else:
+        # Handle the case where user data retrieval failed
+        pass
 
 @socket_io.on('disconnect')
 def handle_disconnect():
