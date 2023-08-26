@@ -20,7 +20,7 @@ def handle_disconnect():
 @socket_io.on('to-server')
 def handle_to_server(arg):
     print(f'new to-server event: {arg}')
-    socket_io.emit('from-server', 'hello from backend daisojfo iajoifjoiasfij')
+    socket_io.emit('to-server', f'{arg}')
     print("Message sent")  # Emit the message
 
 from website import callback
