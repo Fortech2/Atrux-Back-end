@@ -16,8 +16,8 @@ def handle_connect():
     socket_io.emit('from-server', 'hello from backend')
 
 @socket_io.on('join-room')
-def handle_join_room():
-    room = "ica@gmail.com"
+def handle_join_room(data):
+    room = data['room']
     join_room(room)
 
 @socket_io.on('disconnect')
