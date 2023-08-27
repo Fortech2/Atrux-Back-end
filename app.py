@@ -15,6 +15,11 @@ def handle_connect():
     print('new connection')
     socket_io.emit('from-server', 'hello from backend')
 
+@socket_io.on('join-room')
+def handle_join_room():
+    room = "ica@gmail.com"
+    join_room(room)
+
 @socket_io.on('disconnect')
 def handle_disconnect():
     print('disconnected')
