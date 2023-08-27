@@ -15,10 +15,7 @@ def handle_connect():
     print('new connection')
     socket_io.emit('from-server', 'hello from backend')
 
-@socket_io.on('join-room')
-def handle_join_room(data):
-    room = data['room']
-    join_room(room)
+
 
 @socket_io.on('disconnect')
 def handle_disconnect():
@@ -30,11 +27,11 @@ def handle_to_server(arg):
     socket_io.emit('to-server', f'{arg}')
     print("Message sent")  # Emit the message
 
-@socket_io.on('notification')
+@socket_io.on('notifications')
 def handle_notification():
     room = "ica@gmail.com"
     message = "salut"
-    socket_io.emit('notification', {'message': message}, room=room)
+    socket_io.emit('notifications', {'message': message}, room=room)
     print(f'Sent notification to room {room}: {message}')
     socket_io.emit('notification-sent')
 
