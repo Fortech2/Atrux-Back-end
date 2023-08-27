@@ -36,6 +36,7 @@ def handle_notification():
     message = "salut"
     socket_io.emit('notification', {'message': message}, room=room)
     print(f'Sent notification to room {room}: {message}')
+    socket_io.emit('notification-sent')
 
 @socket_io.on('subscribe')
 def handle_subscribe(data):
