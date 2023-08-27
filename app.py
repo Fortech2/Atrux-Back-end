@@ -28,16 +28,16 @@ def handle_to_server(arg):
     print("Message sent")  # Emit the message
 
 @socket_io.on('notifications')
-def handle_notification():
-    room = "ica@gmail.com"
-    message = "salut"
+def handle_notification(driver_email):
+    room = driver_email 
+    message = "New route from your dispatcher"
     socket_io.emit('notifications', {'message': message}, room=room)
-    print(f'Sent notification to room {room}: {message}')
+    print(f'Sent notification to driver {room}: {message}')
     socket_io.emit('notification-sent')
 
-@socket_io.on('subscribe')
 def handle_subscribe(data):
-    room = 'ica@gmail.com'
+    driver_email = data['driver_email']  
+    room = driver_email
     join_room(room)
     print(f'Client joined room: {room}')
 
