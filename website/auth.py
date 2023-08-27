@@ -136,7 +136,8 @@ def get_user_data():
             "email": current_user.email,
             "phone_number": current_user.phone_number,
             "role": "driver",
-            "dispatcher_phone_number": dispatcher_phone_number
+            "dispatcher_phone_number": dispatcher_phone_number,
+            "route": current_user.route
         }
     else:
         dispatcher_drivers = [
