@@ -26,7 +26,7 @@ channel.queue_declare(queue='hello') # Declare a queue
 def callback(ch, method, properties, body):
     json_data = json.loads(body)
     image_str : str = json_data['image']
-    email = json_data['name1']
+    email = json_data['email']
     uuid = json_data['uuid']
     image_str = image_str[2:]
     image_str = image_str[:-1]
