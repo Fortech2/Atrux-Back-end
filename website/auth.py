@@ -153,6 +153,21 @@ def get_user_data():
             "drivers": dispatcher_drivers,  # Now includes name and email
         }
     return jsonify(user_data)
+
+@auth.route('/images', methods=['GET'])
+@login_required
+def get_images():
+    if isinstance(current_user, Driver):
+        images = [
+            {"binary_data": Images.img}  # Include both name and email
+            for image in current_user.images
+        ]   
+        user_data = {
+            "image": images,
+        }
+    return jsonify(user_data)
+
+
 @auth.route('/logout')
 @login_required
 def logout():
