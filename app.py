@@ -15,8 +15,6 @@ def handle_connect():
     print('new connection')
     socket_io.emit('from-server', 'hello from backend')
 
-
-
 @socket_io.on('disconnect')
 def handle_disconnect():
     print('disconnected')
@@ -25,7 +23,7 @@ def handle_disconnect():
 def handle_to_server(arg):
     print(f'new to-server event: {arg}')
     socket_io.emit('to-server', f'{arg}')
-    print("Message sent")  # Emit the message
+    print("Message sent")
 
 @socket_io.on('notifications')
 def handle_notification(driver_email):
@@ -34,6 +32,14 @@ def handle_notification(driver_email):
     socket_io.emit('notifications', {'message': message}, room=room)
     print(f'Sent notification to driver {room}: {message}')
     socket_io.emit('notification-sent')
+
+@socket_io.on('handle-images')
+def handle_images(driver_email):
+    room = driver_email 
+    message = "Motion Detected"
+    socket_io.emit('handle-images', {'message': message}, room=room)
+    print(f'Sent image notification to driver {room}: {message}')
+    socket_io.emit('image-notification-sent')
 
 @socket_io.on('subscribe')
 def handle_subscribe(data):
