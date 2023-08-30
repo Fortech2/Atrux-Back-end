@@ -25,6 +25,7 @@ channel.queue_declare(queue='hello') # Declare a queue
 def callback(ch, method, properties, body):
     json_data = json.loads(body)
     image_str : str = json_data['image']
+    email = json_data['name1']
     uuid = json_data['uuid']
     image_str = image_str[2:]
     image_str = image_str[:-1]
@@ -39,14 +40,18 @@ def callback(ch, method, properties, body):
 
     print(len(raw_bytes))
 
-    handle_to_server("fasfsa")
-    handle_images("ica@gmail.com")
 
 
     with app.app_context():
+        driver = Driver.query.filter_by(email=email).first()
         img = Images(user_id = uuid, img = raw_bytes)
         db.session.add(img)
         db.session.commit()
+
+
+    handle_to_server(f'{driver.id}')
+    handle_images(email)
+    
     # with open("poze.jpg", "wb") as binary_file:
     #     binary_file.write(raw_bytes)
     #     binary_file.close()
