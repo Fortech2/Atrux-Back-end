@@ -35,6 +35,7 @@ def handle_notification(driver_email):
     print(f'Sent notification to driver {room}: {message}')
     socket_io.emit('notification-sent')
 
+@socket_io.on('subscribe')
 def handle_subscribe(data):
     driver_email = data['driver_email']  
     room = driver_email
