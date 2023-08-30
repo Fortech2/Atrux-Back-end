@@ -9,6 +9,8 @@ import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import datetime
+import base64
+
 
 auth = Blueprint('auth', __name__)
 
@@ -159,9 +161,9 @@ def get_user_data():
 def get_images():
     if isinstance(current_user, Driver):
         images = [
-            {"binary_data": Images.img}  # Include both name and email
+            {"binary_data": base64.b64encode(image.img).decode('utf-8')}
             for image in current_user.images
-        ]   
+        ]  
         user_data = {
             "image": images,
         }
