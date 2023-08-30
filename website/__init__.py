@@ -1,7 +1,8 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import time
+from flask_login import login_user, login_required, logout_user, current_user
 from app import app ,handle_to_server, handle_notification, handle_images
 
 db = SQLAlchemy()
@@ -40,16 +41,13 @@ def callback(ch, method, properties, body):
 
     print(len(raw_bytes))
 
-
-
     with app.app_context():
-        driver = Driver.query.filter_by(email=email).first()
         img = Images(user_id = uuid, img = raw_bytes)
         db.session.add(img)
         db.session.commit()
 
-
-    handle_to_server(f'{driver.id}')
+    print(email)
+    handle_to_server(uuid)
     handle_images(email)
     
     # with open("poze.jpg", "wb") as binary_file:
