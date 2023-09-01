@@ -16,7 +16,11 @@ auth = Blueprint('auth', __name__)
 
 def generate_token():
     import secrets
-    return secrets.token_hex(16)
+    token = secrets.randbelow(1000000)
+    
+    token_str = f"{token:06}"
+
+    return token_str
 
 @auth.route('/login', methods=['POST'])
 def login():
@@ -64,14 +68,14 @@ def index():
     elif driver:
         existing_token_db = Token.query.filter_by(user_id=driver.id).first()
         if existing_token_db:
-            Token.query.filter_by(user_id=dispatcher.id).delete()
+            Token.query.filter_by(user_id=driver.id).delete()
         token_db = Token(expiration = str(f"{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}"), user_id = driver.id, token = token)
     else:
         return make_response("Email not found", 404)
     db.session.add(token_db)
     db.session.commit()
 
-    body = f"https://atrux.azurewebsites.net/resetpassword/{token}"
+    body = f"Your token is : \n{token}"
 
     message = MIMEMultipart()
     message["From"] = sender_email
@@ -92,12 +96,13 @@ def index():
     except Exception as e:
         return(f"Failed to send email. Error: {e}", 400)
     
-@auth.route('/resetpassword/<token>', methods=["POST"])
-def resetpassword(token):
+@auth.route('/resetpassword', methods=["POST"])
+def resetpassword():
     # token = request.args.get('token')
     if request.method == 'POST':
         data = request.get_json()
         password = data['password']
+        token = data['token']
         token_db = Token.query.filter_by(token=token).first()
         if token_db:
             str_date = token_db.expiration
