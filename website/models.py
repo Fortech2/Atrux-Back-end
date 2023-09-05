@@ -27,6 +27,7 @@ class Driver(db.Model, UserMixin):
     company = db.Column(db.String(150))
     route = db.Column(db.String(500))
     dispatcher_id = db.Column(db.String(100), db.ForeignKey('users.id'))
+    active = db.Column(db.String(1), default='0')
     images = db.relationship('Images')
 
 class Dispatcher(db.Model, UserMixin): 
