@@ -201,10 +201,11 @@ def signup():
         match role:
             case "driver":
                 dispatcher = Dispatcher.query.filter_by(company=company).first()
+                rbid = data['rbid']
                 if dispatcher is None: 
                     return make_response("Dispatcher not found", 404)
                 new_driver = Driver(name=name, email=email, password=generate_password_hash(password, method='sha256'),
-                                    dispatcher_id=dispatcher.id, phone_number = phone_number, company = company)
+                                    dispatcher_id=dispatcher.id, phone_number = phone_number, company = company, rbid=rbid)
                 db.session.add(new_driver)
                 db.session.commit()
             case "dispatcher":
@@ -244,6 +245,8 @@ def remove_driver():
         return make_response('Driver removed', 200)
 
 
+
 @auth.route('/test', methods=['GET'])
 def test():
     return make_response('Test endpoint', 200)
+

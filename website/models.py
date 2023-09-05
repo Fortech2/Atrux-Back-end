@@ -7,6 +7,10 @@ def get_uuid():
     return uuid4().hex
 
 
+class raspberry(db.Model):
+    id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
+    driver_email = db.Column(db.String(345), unique=True)
+
 class Images(db.Model):
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
     user_id = db.Column(db.String(100), db.ForeignKey('drivers.id'))
@@ -28,6 +32,7 @@ class Driver(db.Model, UserMixin):
     route = db.Column(db.String(500))
     dispatcher_id = db.Column(db.String(100), db.ForeignKey('users.id'))
     active = db.Column(db.String(1), default='0')
+    rbid = db.Column(db.String(100))
     images = db.relationship('Images')
 
 class Dispatcher(db.Model, UserMixin): 

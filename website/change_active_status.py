@@ -1,6 +1,6 @@
 from flask_login import login_required, current_user
 from flask import Blueprint, request, make_response
-from .models import Driver
+from .models import raspberry
 from . import db
 from app import  handle_notification
 
@@ -13,4 +13,12 @@ def change_active():
     active_status = data["active_status"]
     current_user.active = active_status
     db.session.commit()
-    return make_response("Route changed", 200)
+    return make_response("Status changed", 200)
+
+@active_status.route("CreateRB", methods=["POST"])
+def CreateRB():
+    rasp = raspberry()
+    db.session.add(rasp)
+    db.session.commit()
+    return make_response("Added raspberry in db", 200)
+    
