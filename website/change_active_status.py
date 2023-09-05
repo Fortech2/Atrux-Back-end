@@ -1,7 +1,7 @@
 from flask_login import login_required, current_user
 from flask import Blueprint, request, make_response
 from .models import Driver
-from .. import db
+from . import db
 from app import  handle_notification
 
 active_status = Blueprint('active_status', __name__)
