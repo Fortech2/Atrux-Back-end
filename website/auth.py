@@ -176,13 +176,18 @@ def get_root_notification():
 def get_alarm_notification():
     if isinstance(current_user, Driver):
         alarm_notifications = [
-            {"binary_data": base64.b64encode(image.img).decode('utf-8')}
+            {
+                "binary_data": base64.b64encode(image.img).decode('utf-8'),
+                "date": image.date  # Include the date associated with the image
+            }
             for image in current_user.alarm_notifications
         ]  
         user_data = {
             "alarm_notification": alarm_notifications,
         }
-    return jsonify(user_data)
+        return jsonify(user_data)
+    else:
+        return jsonify({"message": "Access denied"}), 403  
 
 
 @auth.route('/logout')
