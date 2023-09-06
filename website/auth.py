@@ -164,14 +164,13 @@ def get_user_data():
 @auth.route('/root_notification', methods=['GET'])
 def get_root_notification():
     if isinstance(current_user, Driver):
-        root_notifications = [
-            {"binary_data": base64.b64encode(root_notification.img).decode('utf-8'), "date" : root_notification.expiration}
-            for root_notification in current_user.root_notifications
-        ]  
+        root_notifications = [root_notification.expiration for root_notification in current_user.root_notification]
         user_data = {
-            "root_notification": root_notifications,
+            "root_notification_expiration": root_notifications,
         }
-    return jsonify(user_data)
+        return jsonify(user_data)
+    else:
+        return jsonify({"message": "User is not a driver."}), 401
 
 @auth.route('/alarm_notification', methods=['GET'])
 def get_alarm_notification():
