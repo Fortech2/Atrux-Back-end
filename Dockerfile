@@ -8,4 +8,4 @@ EXPOSE 50000
 
 ENV FLASK_APP=app.py
 
-CMD ["flask", "run"]
+CMD ["python3", "app.py"]
