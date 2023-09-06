@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response, json
-from .models import Dispatcher, Driver, Token, Images
+from .models import Dispatcher, Driver, Token
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -161,16 +161,27 @@ def get_user_data():
         }
     return jsonify(user_data)
 
-@auth.route('/images', methods=['GET'])
-@login_required
-def get_images():
+@auth.route('/root_notification', methods=['GET'])
+def get_root_notification():
     if isinstance(current_user, Driver):
-        images = [
-            {"binary_data": base64.b64encode(image.img).decode('utf-8')}
-            for image in current_user.images
+        root_notifications = [
+            {"binary_data": base64.b64encode(root_notification.img).decode('utf-8'), "date" : root_notification.expiration}
+            for root_notification in current_user.root_notifications
         ]  
         user_data = {
-            "image": images,
+            "root_notification": root_notifications,
+        }
+    return jsonify(user_data)
+
+@auth.route('/alarm_notification', methods=['GET'])
+def get_alarm_notification():
+    if isinstance(current_user, Driver):
+        alarm_notifications = [
+            {"binary_data": base64.b64encode(image.img).decode('utf-8')}
+            for image in current_user.alarm_notifications
+        ]  
+        user_data = {
+            "alarm_notification": alarm_notifications,
         }
     return jsonify(user_data)
 
@@ -201,10 +212,11 @@ def signup():
         match role:
             case "driver":
                 dispatcher = Dispatcher.query.filter_by(company=company).first()
+                rbid = data['rbid']
                 if dispatcher is None: 
                     return make_response("Dispatcher not found", 404)
                 new_driver = Driver(name=name, email=email, password=generate_password_hash(password, method='sha256'),
-                                    dispatcher_id=dispatcher.id, phone_number = phone_number, company = company)
+                                    dispatcher_id=dispatcher.id, phone_number = phone_number, company = company, rbid=rbid)
                 db.session.add(new_driver)
                 db.session.commit()
             case "dispatcher":
@@ -244,6 +256,8 @@ def remove_driver():
         return make_response('Driver removed', 200)
 
 
+
 @auth.route('/test', methods=['GET'])
 def test():
     return make_response('Test endpoint', 200)
+

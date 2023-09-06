@@ -16,7 +16,8 @@ import random
 import string
 import json
 from threading import Thread
-from .models import Images
+from .models import Alarm_Notification
+
 url = os.environ.get('CLOUDAMQP_URL', 'amqps://zqbavobe:8LsWyHTXCdM2lFB0AbUS-540BCdksEBM@cow.rmq2.cloudamqp.com/zqbavobe')
 params = pika.URLParameters(url)
 connection = pika.BlockingConnection(params)
@@ -42,7 +43,7 @@ def callback(ch, method, properties, body):
     print(len(raw_bytes))
 
     with app.app_context():
-        img = Images(user_id = uuid, img = raw_bytes)
+        img = Alarm_Notification(user_id = uuid, img = raw_bytes)
         db.session.add(img)
         db.session.commit()
 
@@ -72,10 +73,12 @@ db.init_app(app)
 from .views import views
 from .auth import auth
 from .add_route import chat
+from .change_active_status import active_status
 
 app.register_blueprint(views, url_prefix="/")
 app.register_blueprint(auth, url_prefix="/")
 app.register_blueprint(chat, url_prefix="/")
+app.register_blueprint(active_status, url_prefix="/")
 
 from .models import Dispatcher, Driver
 

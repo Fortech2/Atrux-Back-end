@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from . import db
-from .models import Dispatcher, Driver, Images
+from .models import Dispatcher, Driver
 from flask_login import login_user, login_required, logout_user, current_user
 import PIL.Image
 import base64
