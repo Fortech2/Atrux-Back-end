@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response, json
-from .models import Dispatcher, Driver, Token, Images
+from .models import Dispatcher, Driver, Token
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -161,16 +161,27 @@ def get_user_data():
         }
     return jsonify(user_data)
 
-@auth.route('/images', methods=['GET'])
-@login_required
-def get_images():
+@auth.route('/root_notification', methods=['GET'])
+def get_root_notification():
     if isinstance(current_user, Driver):
-        images = [
-            {"binary_data": base64.b64encode(image.img).decode('utf-8')}
-            for image in current_user.images
+        root_notifications = [
+            {"binary_data": base64.b64encode(root_notification.img).decode('utf-8'), "date" : root_notification.expiration}
+            for root_notification in current_user.root_notifications
         ]  
         user_data = {
-            "image": images,
+            "root_notification": root_notifications,
+        }
+    return jsonify(user_data)
+
+@auth.route('/alarm_notification', methods=['GET'])
+def get_alarm_notification():
+    if isinstance(current_user, Driver):
+        alarm_notifications = [
+            {"binary_data": base64.b64encode(image.img).decode('utf-8')}
+            for image in current_user.alarm_notifications
+        ]  
+        user_data = {
+            "alarm_notification": alarm_notifications,
         }
     return jsonify(user_data)
 

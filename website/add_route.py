@@ -1,9 +1,9 @@
 from flask_login import login_required, current_user
 from flask import Blueprint, request, make_response
-from .models import Driver
+from .models import Driver, Root_Notification
 from . import db
 from app import  handle_notification
-
+import datetime
 chat = Blueprint('chat', __name__)
 
 @chat.route("/route", methods=['POST', "DELETE"])
@@ -14,10 +14,11 @@ def add_route():
     driver = Driver.query.filter_by(email=driver_email).first()
     if request.method == "POST":
         route = data["route"]
+        now = datetime.datetime.now()
+        root_notification = Root_Notification(user_id=driver.id, content=data['route'], expiration=str(f"{now.year}-{now.month}-{now.day}-{now.hour}-{now.minute}-{now.second}"))
         driver.route = route
-        print(driver_email)
-        print(driver_email)
-        print(driver_email)
+        db.session.add(root_notification)
+        db.session.commit()
         handle_notification(driver_email)
     else:
         driver.route = "" 

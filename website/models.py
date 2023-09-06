@@ -11,7 +11,12 @@ class raspberry(db.Model):
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
     driver_email = db.Column(db.String(345), unique=True)
 
-class Images(db.Model):
+class Root_Notification(db.Model):
+    id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
+    user_id = db.Column(db.String(100), db.ForeignKey('drivers.id'))
+    content = db.Column(db.String(500))
+    expiration = db.Column(db.String(100))
+class Alarm_Notification(db.Model):
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
     user_id = db.Column(db.String(100), db.ForeignKey('drivers.id'))
     img = db.Column(db.LargeBinary)
@@ -33,7 +38,8 @@ class Driver(db.Model, UserMixin):
     dispatcher_id = db.Column(db.String(100), db.ForeignKey('users.id'))
     active = db.Column(db.String(1), default='0')
     rbid = db.Column(db.String(100))
-    images = db.relationship('Images')
+    alarm_notifications = db.relationship('Alarm_Notification')
+    root_notification = db.relationship('Root_Notification')
 
 class Dispatcher(db.Model, UserMixin): 
     __tablename__ = "users"

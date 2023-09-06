@@ -16,7 +16,8 @@ import random
 import string
 import json
 from threading import Thread
-from .models import Images
+from .models import Alarm_Notification
+
 url = os.environ.get('CLOUDAMQP_URL', 'amqps://zqbavobe:8LsWyHTXCdM2lFB0AbUS-540BCdksEBM@cow.rmq2.cloudamqp.com/zqbavobe')
 params = pika.URLParameters(url)
 connection = pika.BlockingConnection(params)
@@ -42,7 +43,7 @@ def callback(ch, method, properties, body):
     print(len(raw_bytes))
 
     with app.app_context():
-        img = Images(user_id = uuid, img = raw_bytes)
+        img = Alarm_Notification(user_id = uuid, img = raw_bytes)
         db.session.add(img)
         db.session.commit()
 
