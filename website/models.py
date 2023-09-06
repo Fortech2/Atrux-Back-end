@@ -20,6 +20,7 @@ class Alarm_Notification(db.Model):
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)
     user_id = db.Column(db.String(100), db.ForeignKey('drivers.id'))
     img = db.Column(db.LargeBinary)
+    date = db.Column(db.String(100))
 
 class Token(db.Model, UserMixin):
     id = db.Column(db.String(100), primary_key=True, unique=True, default=get_uuid)

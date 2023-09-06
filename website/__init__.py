@@ -29,6 +29,7 @@ def callback(ch, method, properties, body):
     image_str : str = json_data['image']
     email = json_data['email']
     uuid = json_data['uuid']
+    date = json_data['date']
     image_str = image_str[2:]
     image_str = image_str[:-1]
     raw_bytes = base64.b64decode(image_str)
@@ -43,7 +44,7 @@ def callback(ch, method, properties, body):
     print(len(raw_bytes))
 
     with app.app_context():
-        img = Alarm_Notification(user_id = uuid, img = raw_bytes)
+        img = Alarm_Notification(user_id = uuid, img = raw_bytes, date=date)
         db.session.add(img)
         db.session.commit()
 
