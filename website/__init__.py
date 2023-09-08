@@ -41,12 +41,13 @@ def callback(ch, method, properties, body):
     imag = PIL.Image.open(io.BytesIO(raw_bytes))
     imag.save('nume_poza.png')
 
-    print(len(raw_bytes))
+    print(f"A new picture found in queue. Size is {len(raw_bytes)}")
 
     with app.app_context():
         img = Alarm_Notification(user_id = uuid, img = raw_bytes, date=date)
         db.session.add(img)
         db.session.commit()
+        print("Picture saved in DB")
 
     print(email)
     handle_to_server(uuid)
