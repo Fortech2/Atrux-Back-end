@@ -53,8 +53,9 @@ def handle_unsubscribe(data):
     leave_room(room)
     print(f'Client left room: {room}')
 
+from website import callback
 
-if __name__ == '__main__':
+if __name__ == '__app__':
     app.run()
     gevent_worker = 'geventwebsocket.gunicorn.workers.GeventWebSocketWorker'
     socket_io.run(app, port=50000)#, worker=gevent_worker)

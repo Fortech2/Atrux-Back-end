@@ -3,7 +3,7 @@ import datetime
 from flask import Blueprint, request, make_response
 from flask_login import login_required
 
-from main import handle_notification
+from app import handle_notification
 from . import db
 from .models import Driver, Root_Notification
 
