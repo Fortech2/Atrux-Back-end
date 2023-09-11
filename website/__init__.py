@@ -1,19 +1,23 @@
-import base64
-import io
-import json
-from threading import Thread
-
-import PIL.Image
-import os
-import pika
-from flask_login import LoginManager
+from flask import Flask, request, render_template, session
 from flask_sqlalchemy import SQLAlchemy
-
-from main import app, handle_to_server, handle_images
-from .models import Alarm_Notification
+from flask_login import LoginManager
+import time
+from flask_login import login_user, login_required, logout_user, current_user
+from app import app ,handle_to_server, handle_notification, handle_images
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
+
+import pika, os
+import PIL.Image
+import io
+import base64
+import random
+import string
+import json
+from threading import Thread
+from .models import Alarm_Notification
+
 url = os.environ.get('CLOUDAMQP_URL',
                      'amqps://zqbavobe:8LsWyHTXCdM2lFB0AbUS-540BCdksEBM@cow.rmq2.cloudamqp.com/zqbavobe')
 params = pika.URLParameters(url)
@@ -97,5 +101,5 @@ def load_user(user_id):
     return user
 
 
-if __name__ == "__main__":
+if __name__ == "__app__":
     pass
