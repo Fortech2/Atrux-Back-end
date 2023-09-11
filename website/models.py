@@ -1,7 +1,9 @@
-from . import db
-from flask_login import UserMixin
-from sqlalchemy.sql import func
 from uuid import uuid4
+
+from flask_login import UserMixin
+
+from . import db
+
 
 def get_uuid():
     return uuid4().hex

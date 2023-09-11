@@ -1,10 +1,11 @@
-from flask import Blueprint, request, jsonify, make_response
-from . import db
-from .models import Dispatcher, Driver
-from flask_login import login_user, login_required, logout_user, current_user
-import PIL.Image
-import base64
 import io
+
+import PIL.Image
+from flask import Blueprint, make_response
+from flask_login import login_required, current_user
+
+from .models import Driver
+
 views = Blueprint('views', __name__)
 
 @views.route('/', methods=['POST'])
