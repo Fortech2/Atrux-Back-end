@@ -1,8 +1,8 @@
-from flask_login import login_required, current_user
 from flask import Blueprint, request, make_response
-from .models import raspberry
+from flask_login import login_required, current_user
+
 from . import db
-from app import  handle_notification
+from .models import raspberry
 
 active_status = Blueprint('active_status', __name__)
 

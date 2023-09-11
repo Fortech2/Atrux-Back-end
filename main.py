@@ -1,7 +1,6 @@
 # from website import make_app
-from flask_socketio import SocketIO, join_room, leave_room, send
-from flask import Flask, session
-#import geventwebsocket.gunicorn.workers
+from flask import Flask
+from flask_socketio import SocketIO, join_room, leave_room
 
 # app = make_app()
 app = Flask(__name__)
@@ -54,7 +53,6 @@ def handle_unsubscribe(data):
     leave_room(room)
     print(f'Client left room: {room}')
 
-from website import callback
 
 if __name__ == '__main__':
     app.run()

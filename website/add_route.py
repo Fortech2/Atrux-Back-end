@@ -1,9 +1,12 @@
-from flask_login import login_required, current_user
-from flask import Blueprint, request, make_response
-from .models import Driver, Root_Notification
-from . import db
-from app import  handle_notification
 import datetime
+
+from flask import Blueprint, request, make_response
+from flask_login import login_required
+
+from main import handle_notification
+from . import db
+from .models import Driver, Root_Notification
+
 chat = Blueprint('chat', __name__)
 
 @chat.route("/route", methods=['POST', "DELETE"])
