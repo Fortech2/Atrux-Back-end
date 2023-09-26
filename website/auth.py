@@ -187,7 +187,24 @@ def get_alarm_notification():
         }
         return jsonify(user_data)
     else:
-        return jsonify({"message": "Access denied"}), 403  
+        alarm_notifications = []
+
+        for driver in current_user.drivers:
+            driver_alarms = []
+            for image in driver.alarm_notifications:
+                alarm_notification = {
+                    "binary_data": base64.b64encode(image.img).decode('utf-8'),
+                    "date": image.date,  # Include the date associated with the image
+                    "driver_name": driver.name
+                }
+                driver_alarms.append(alarm_notification)
+            alarm_notifications.extend(driver_alarms)
+
+        user_data = {
+        "alarm_notification": alarm_notifications,
+        }   
+
+        return jsonify(user_data)
 
 
 @auth.route('/logout')
