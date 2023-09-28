@@ -182,8 +182,12 @@ def get_alarm_notification():
             }
             for image in current_user.alarm_notifications
         ]  
+
+        sorted_list = sorted(alarm_notifications, key=lambda x: x["date"])
+        sorted_list.reverse()
+
         user_data = {
-            "alarm_notification": alarm_notifications,
+            "alarm_notification": sorted_list,
         }
         return jsonify(user_data)
     else:
